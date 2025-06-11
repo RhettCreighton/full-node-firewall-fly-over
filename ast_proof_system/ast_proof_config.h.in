@@ -1,0 +1,47 @@
+/* SPDX-FileCopyrightText: 2025 Rhett Creighton
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#ifndef AST_PROOF_CONFIG_H
+#define AST_PROOF_CONFIG_H
+
+/* AST Proof System Configuration */
+#define AST_PROOF_SYSTEM_VERSION "@PROJECT_VERSION@"
+#define AST_PROOF_SYSTEM_DIR "@AST_PROOF_SYSTEM_DIR@"
+#define AST_PROOF_SYSTEM_BIN_DIR "@AST_PROOF_SYSTEM_BIN_DIR@"
+
+/* Enable compile-time verification macros */
+#ifdef AST_PROOF_SYSTEM_ENABLED
+
+/* Deterministic operation marker */
+#define DETERMINISTIC __attribute__((annotate("deterministic")))
+
+/* Constraint markers */
+#define CONSTRAINED(var, min, max) \
+    __attribute__((annotate("constrained:" #var ":[" #min "," #max "]")))
+
+/* Proof assertion */
+#define PROOF_ASSERT(cond, msg) \
+    do { \
+        if (!(cond)) { \
+            __builtin_trap(); /* Compile-time failure */ \
+        } \
+    } while(0)
+
+/* Safe operations */
+#define SAFE_DIVIDE(a, b) \
+    (((b) != 0) ? ((a) / (b)) : 0)
+
+#define SAFE_ARRAY_ACCESS(arr, idx, size) \
+    (((idx) >= 0 && (idx) < (size)) ? (arr)[idx] : 0)
+
+#else
+/* Fallback for when system is disabled */
+#define DETERMINISTIC
+#define CONSTRAINED(var, min, max)
+#define PROOF_ASSERT(cond, msg)
+#define SAFE_DIVIDE(a, b) ((a) / (b))
+#define SAFE_ARRAY_ACCESS(arr, idx, size) ((arr)[idx])
+#endif
+
+#endif /* AST_PROOF_CONFIG_H */

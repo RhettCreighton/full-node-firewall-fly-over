@@ -1,0 +1,40 @@
+# SPDX-FileCopyrightText: 2025 Rhett Creighton
+# SPDX-License-Identifier: Apache-2.0
+
+# AST Proof System Configuration
+
+set(AST_PROOF_VERSION @PROJECT_VERSION@)
+set(AST_PROOF_INCLUDE_DIR @CMAKE_INSTALL_PREFIX@/include/ast_proof_system)
+set(AST_PROOF_LIB_DIR @CMAKE_INSTALL_PREFIX@/lib)
+set(AST_PROOF_BIN_DIR @CMAKE_INSTALL_PREFIX@/bin)
+
+# Find the ast_proof executable
+find_program(AST_PROOF_EXECUTABLE ast_proof
+    HINTS ${AST_PROOF_BIN_DIR}
+)
+
+# Find the library
+find_library(AST_PROOF_LIBRARY ast_proof_lib
+    HINTS ${AST_PROOF_LIB_DIR}
+)
+
+# Function to add AST verification to a target
+function(add_ast_verification target)
+    if(NOT AST_PROOF_EXECUTABLE)
+        message(WARNING "ast_proof executable not found - verification disabled")
+        return()
+    endif()
+    
+    # Get source files
+    get_target_property(sources ${target} SOURCES)
+    
+    # Add verification command
+    add_custom_command(
+        TARGET ${target} POST_BUILD
+        COMMAND ${AST_PROOF_EXECUTABLE} -f $<TARGET_FILE:${target}>
+        COMMENT "Running AST safety verification on ${target}"
+    )
+endfunction()
+
+# Mark as found
+set(AST_PROOF_FOUND TRUE)

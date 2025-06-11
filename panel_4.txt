@@ -1,0 +1,20 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║  Panel 4: The Safe Wrapper Function                          ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║    Unsafe Request → Truth Verification → Safe Access         ║
+║                                                              ║
+║    managed_aircraft_t* aircraft_manager_get_safe(            ║
+║        aircraft_manager_t* manager, int id,                  ║
+║        truth_bucket_t* truth) {                              ║
+║                                                              ║
+║        TRUTH_REQUIRE(truth, "valid manager",                 ║
+║                      manager != NULL);                       ║
+║        TRUTH_REQUIRE(truth, "valid id",                      ║
+║                      id >= 0 && id < manager->count);        ║
+║                                                              ║
+║        return &manager->aircraft[id]; // SAFE! ✓             ║
+║    }                                                         ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝

@@ -1,0 +1,77 @@
+ERROR IMPOSSIBILITY PROOF CERTIFICATE
+====================================
+
+File: ../test_combat_effects_safe.c.proof
+Total Operations: 12
+Proven Safe: 0
+Unproven: 12
+
+✗ SOME ERROR CONDITIONS MAY BE REACHABLE
+
+SAFETY PROOFS:
+--------------
+
+1. Null Dereference at col:9, col:18
+   Status: UNSAFE
+   Proof: 
+
+2. Null Dereference at line:31:42, col:51
+   Status: UNSAFE
+   Proof: 
+
+3. Null Dereference at col:34, col:43
+   Status: UNSAFE
+   Proof: 
+
+4. Division by Zero at col:20, col:29
+   Status: UNSAFE
+   Proof: 
+
+5. Division by Zero at col:20, col:29
+   Status: UNSAFE
+   Proof: 
+
+6. Null Dereference at col:9, col:18
+   Status: UNSAFE
+   Proof: 
+
+7. Null Dereference at col:33, col:42
+   Status: UNSAFE
+   Proof: 
+
+8. Division by Zero at col:20, col:29
+   Status: UNSAFE
+   Proof: 
+
+9. Null Dereference at col:44, col:53
+   Status: UNSAFE
+   Proof: 
+
+10. Division by Zero at col:20, col:29
+   Status: UNSAFE
+   Proof: 
+
+11. Null Dereference at col:44, col:53
+   Status: UNSAFE
+   Proof: 
+
+12. Array Bounds at col:32, col:45
+   Status: UNSAFE
+   Proof: 
+
+REQUIRED FIXES:
+---------------
+- col:9, col:18: Use null check: if (!ptr) return;
+- line:31:42, col:51: Use null check: if (!ptr) return;
+- col:34, col:43: Use null check: if (!ptr) return;
+- col:20, col:29: Use SAFE_DIV() macro or ensure divisor > 0
+- col:20, col:29: Use SAFE_DIV() macro or ensure divisor > 0
+- col:9, col:18: Use null check: if (!ptr) return;
+- col:33, col:42: Use null check: if (!ptr) return;
+- col:20, col:29: Use SAFE_DIV() macro or ensure divisor > 0
+- col:44, col:53: Use null check: if (!ptr) return;
+- col:20, col:29: Use SAFE_DIV() macro or ensure divisor > 0
+- col:44, col:53: Use null check: if (!ptr) return;
+- col:32, col:45: Use SAFE_INDEX() macro or modulo wrapping
+
+VERIFICATION TIMESTAMP: Jun 11 2025 07:15:33

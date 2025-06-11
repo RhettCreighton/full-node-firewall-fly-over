@@ -1,0 +1,10 @@
+=== AST-Based Safety Analysis ===
+Analyzing: /home/bob/github/canvas/games/sky-combat/src/models/enemies.c
+
+Found 1 dangerous operations
+
+Proof obligations:
+  - PROVE: Division at col:28, col:35 has non-zero divisor
+
+Generating GDB proof script...
+Created: ast_generated_proof.gdb

@@ -1,0 +1,3 @@
+[submodule "vendor/FStar"]
+	path = vendor/FStar
+	url = https://github.com/FStarLang/FStar.git

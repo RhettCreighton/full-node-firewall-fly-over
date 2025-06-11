@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1400" height="2400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="2400" fill="#f0f0f0"/>
+  <text x="20" y="40" font-family="monospace" font-size="14" fill="black">
+    <tspan x="20" dy="0">Aircraft Manager Safety Comic - How We Prevent Segfaults</tspan>
+  </text>
+  <g transform="translate(20, 80)">
+  <g transform="translate(0, 0)">
+    <text x="0" y="0" font-family="monospace" font-size="13" fill="black">╔══════════════════════════════════════════════════════════════╗</text>
+    <text x="0" y="16" font-family="monospace" font-size="13" fill="black">║  Panel 1: The Dreaded Segfault                               ║</text>
+    <text x="0" y="32" font-family="monospace" font-size="13" fill="black">╠══════════════════════════════════════════════════════════════╣</text>
+    <text x="0" y="48" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="64" font-family="monospace" font-size="13" fill="black">║    Developer: "Oh no! What if someone                       ║</text>
+    <text x="0" y="80" font-family="monospace" font-size="13" fill="black">║               passes an invalid ID?"                         ║</text>
+    <text x="0" y="96" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="112" font-family="monospace" font-size="13" fill="black">║    // UNSAFE CODE                                            ║</text>
+    <text x="0" y="128" font-family="monospace" font-size="13" fill="black">║    managed_aircraft_t* get_aircraft(                         ║</text>
+    <text x="0" y="144" font-family="monospace" font-size="13" fill="black">║        aircraft_manager_t* mgr, int id) {                    ║</text>
+    <text x="0" y="160" font-family="monospace" font-size="13" fill="black">║        return &amp;mgr-&gt;aircraft[id]; // BOOM! 💥                ║</text>
+    <text x="0" y="176" font-family="monospace" font-size="13" fill="black">║    }                                                         ║</text>
+    <text x="0" y="192" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="208" font-family="monospace" font-size="13" fill="black">║    Segfault Bug: "I'm coming for you!" 🐛                    ║</text>
+    <text x="0" y="224" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="240" font-family="monospace" font-size="13" fill="black">╚══════════════════════════════════════════════════════════════╝</text>
+  </g>
+  <g transform="translate(0, 296)">
+    <text x="0" y="0" font-family="monospace" font-size="13" fill="black">╔══════════════════════════════════════════════════════════════╗</text>
+    <text x="0" y="16" font-family="monospace" font-size="13" fill="black">║  Panel 2: Truth Bucket to the Rescue!                        ║</text>
+    <text x="0" y="32" font-family="monospace" font-size="13" fill="black">╠══════════════════════════════════════════════════════════════╣</text>
+    <text x="0" y="48" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="64" font-family="monospace" font-size="13" fill="black">║    Developer: "We'll use formal verification!"               ║</text>
+    <text x="0" y="80" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="96" font-family="monospace" font-size="13" fill="black">║    🛡️  TRUTH BUCKET SHIELD 🛡️                                 ║</text>
+    <text x="0" y="112" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="128" font-family="monospace" font-size="13" fill="black">║    // VERIFIED SAFE                                          ║</text>
+    <text x="0" y="144" font-family="monospace" font-size="13" fill="black">║    TRUTH_REQUIRE(truth,                                      ║</text>
+    <text x="0" y="160" font-family="monospace" font-size="13" fill="black">║        "manager is not null",                                ║</text>
+    <text x="0" y="176" font-family="monospace" font-size="13" fill="black">║        manager != NULL);                                     ║</text>
+    <text x="0" y="192" font-family="monospace" font-size="13" fill="black">║    TRUTH_REQUIRE(truth,                                      ║</text>
+    <text x="0" y="208" font-family="monospace" font-size="13" fill="black">║        "id is in bounds",                                    ║</text>
+    <text x="0" y="224" font-family="monospace" font-size="13" fill="black">║        id &gt;= 0 &amp;&amp; id &lt; mgr-&gt;count);                         ║</text>
+    <text x="0" y="240" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="256" font-family="monospace" font-size="13" fill="black">╚══════════════════════════════════════════════════════════════╝</text>
+  </g>
+  <g transform="translate(0, 608)">
+    <text x="0" y="0" font-family="monospace" font-size="13" fill="black">╔══════════════════════════════════════════════════════════════╗</text>
+    <text x="0" y="16" font-family="monospace" font-size="13" fill="black">║  Panel 3: Every Access is Bounds-Checked                     ║</text>
+    <text x="0" y="32" font-family="monospace" font-size="13" fill="black">╠══════════════════════════════════════════════════════════════╣</text>
+    <text x="0" y="48" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="64" font-family="monospace" font-size="13" fill="black">║    Aircraft Array [16 slots total, 5 used]:                 ║</text>
+    <text x="0" y="80" font-family="monospace" font-size="13" fill="black">║    [✓][✓][✓][✓][✓][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]         ║</text>
+    <text x="0" y="96" font-family="monospace" font-size="13" fill="black">║     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15         ║</text>
+    <text x="0" y="112" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="128" font-family="monospace" font-size="13" fill="black">║    // Runtime verification                                   ║</text>
+    <text x="0" y="144" font-family="monospace" font-size="13" fill="black">║    static bool verify_aircraft_count_bounds(                 ║</text>
+    <text x="0" y="160" font-family="monospace" font-size="13" fill="black">║        const truth_bucket_t* bucket,                         ║</text>
+    <text x="0" y="176" font-family="monospace" font-size="13" fill="black">║        void* context) {                                      ║</text>
+    <text x="0" y="192" font-family="monospace" font-size="13" fill="black">║        aircraft_manager_t* mgr = context;                    ║</text>
+    <text x="0" y="208" font-family="monospace" font-size="13" fill="black">║        return mgr != NULL &amp;&amp;                                 ║</text>
+    <text x="0" y="224" font-family="monospace" font-size="13" fill="black">║               mgr-&gt;aircraft_count &gt;= 0 &amp;&amp;                    ║</text>
+    <text x="0" y="240" font-family="monospace" font-size="13" fill="black">║               mgr-&gt;aircraft_count &lt;= MAX_AIRCRAFT;           ║</text>
+    <text x="0" y="256" font-family="monospace" font-size="13" fill="black">║    }                                                         ║</text>
+    <text x="0" y="272" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="288" font-family="monospace" font-size="13" fill="black">╚══════════════════════════════════════════════════════════════╝</text>
+  </g>
+  <g transform="translate(0, 952)">
+    <text x="0" y="0" font-family="monospace" font-size="13" fill="black">╔══════════════════════════════════════════════════════════════╗</text>
+    <text x="0" y="16" font-family="monospace" font-size="13" fill="black">║  Panel 4: The Safe Wrapper Function                          ║</text>
+    <text x="0" y="32" font-family="monospace" font-size="13" fill="black">╠══════════════════════════════════════════════════════════════╣</text>
+    <text x="0" y="48" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="64" font-family="monospace" font-size="13" fill="black">║    Unsafe Request → Truth Verification → Safe Access         ║</text>
+    <text x="0" y="80" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="96" font-family="monospace" font-size="13" fill="black">║    managed_aircraft_t* aircraft_manager_get_safe(            ║</text>
+    <text x="0" y="112" font-family="monospace" font-size="13" fill="black">║        aircraft_manager_t* manager, int id,                  ║</text>
+    <text x="0" y="128" font-family="monospace" font-size="13" fill="black">║        truth_bucket_t* truth) {                              ║</text>
+    <text x="0" y="144" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="160" font-family="monospace" font-size="13" fill="black">║        TRUTH_REQUIRE(truth, "valid manager",                 ║</text>
+    <text x="0" y="176" font-family="monospace" font-size="13" fill="black">║                      manager != NULL);                       ║</text>
+    <text x="0" y="192" font-family="monospace" font-size="13" fill="black">║        TRUTH_REQUIRE(truth, "valid id",                      ║</text>
+    <text x="0" y="208" font-family="monospace" font-size="13" fill="black">║                      id &gt;= 0 &amp;&amp; id &lt; manager-&gt;count);        ║</text>
+    <text x="0" y="224" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="240" font-family="monospace" font-size="13" fill="black">║        return &amp;manager-&gt;aircraft[id]; // SAFE! ✓             ║</text>
+    <text x="0" y="256" font-family="monospace" font-size="13" fill="black">║    }                                                         ║</text>
+    <text x="0" y="272" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="288" font-family="monospace" font-size="13" fill="black">╚══════════════════════════════════════════════════════════════╝</text>
+  </g>
+  <g transform="translate(0, 1296)">
+    <text x="0" y="0" font-family="monospace" font-size="13" fill="black">╔══════════════════════════════════════════════════════════════╗</text>
+    <text x="0" y="16" font-family="monospace" font-size="13" fill="black">║  Panel 5: Mathematical Proof with F*                         ║</text>
+    <text x="0" y="32" font-family="monospace" font-size="13" fill="black">╠══════════════════════════════════════════════════════════════╣</text>
+    <text x="0" y="48" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="64" font-family="monospace" font-size="13" fill="black">║    Mathematician: "Proven at compile time!" 🎓                ║</text>
+    <text x="0" y="80" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="96" font-family="monospace" font-size="13" fill="black">║    // F* Type System Proof                                   ║</text>
+    <text x="0" y="112" font-family="monospace" font-size="13" fill="black">║    type valid_count = n:nat{n &lt;= 16}                         ║</text>
+    <text x="0" y="128" font-family="monospace" font-size="13" fill="black">║    type valid_id (count:valid_count) =                      ║</text>
+    <text x="0" y="144" font-family="monospace" font-size="13" fill="black">║        n:nat{n &lt; count}                                      ║</text>
+    <text x="0" y="160" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="176" font-family="monospace" font-size="13" fill="black">║    let get_aircraft (mgr:aircraft_manager)                   ║</text>
+    <text x="0" y="192" font-family="monospace" font-size="13" fill="black">║        (id:valid_id mgr.count) =                            ║</text>
+    <text x="0" y="208" font-family="monospace" font-size="13" fill="black">║        mgr.aircraft.(id) (* Type-safe! *)                   ║</text>
+    <text x="0" y="224" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="240" font-family="monospace" font-size="13" fill="black">║    // Compiler rejects invalid access!                       ║</text>
+    <text x="0" y="256" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="272" font-family="monospace" font-size="13" fill="black">╚══════════════════════════════════════════════════════════════╝</text>
+  </g>
+  <g transform="translate(0, 1624)">
+    <text x="0" y="0" font-family="monospace" font-size="13" fill="black">╔══════════════════════════════════════════════════════════════╗</text>
+    <text x="0" y="16" font-family="monospace" font-size="13" fill="black">║  Panel 6: Segfault Defeated!                                 ║</text>
+    <text x="0" y="32" font-family="monospace" font-size="13" fill="black">╠══════════════════════════════════════════════════════════════╣</text>
+    <text x="0" y="48" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="64" font-family="monospace" font-size="13" fill="black">║    Developer: "No more segfaults! 🎉"                        ║</text>
+    <text x="0" y="80" font-family="monospace" font-size="13" fill="black">║               "Every access is verified safe!"               ║</text>
+    <text x="0" y="96" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="112" font-family="monospace" font-size="13" fill="black">║    Segfault Bug: ☠️  RIP                                      ║</text>
+    <text x="0" y="128" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="144" font-family="monospace" font-size="13" fill="black">║    ✓ Null checks on every access                            ║</text>
+    <text x="0" y="160" font-family="monospace" font-size="13" fill="black">║    ✓ Bounds verified before array access                    ║</text>
+    <text x="0" y="176" font-family="monospace" font-size="13" fill="black">║    ✓ Type system prevents invalid states                    ║</text>
+    <text x="0" y="192" font-family="monospace" font-size="13" fill="black">║    ✓ Truth buckets document invariants                      ║</text>
+    <text x="0" y="208" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="224" font-family="monospace" font-size="13" fill="black">║    The End - Sleep well knowing your code is SAFE!          ║</text>
+    <text x="0" y="240" font-family="monospace" font-size="13" fill="black">║                                                              ║</text>
+    <text x="0" y="256" font-family="monospace" font-size="13" fill="black">╚══════════════════════════════════════════════════════════════╝</text>
+  </g>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+[
+  {
+    "title": "The Academy Garden - Array Bounds",
+    "url": "https://cdn.leonardo.ai/users/f26f4645-9d1f-4608-8d43-255fb78008b6/generations/ac34d2d6-040b-4c68-8cdd-f36b662c462c/Leonardo_Anime_XL_Comic_book_page_two_ancient_Greek_philosophe_0.jpg",
+    "concept": "Array bounds checking prevents segfaults",
+    "dialogue": "CODE: if (index >= 16) return -1;<br>MEANING: We check every array access!"
+  },
+  {
+    "title": "The Null Bridge Over Chaos",
+    "url": "https://cdn.leonardo.ai/users/f26f4645-9d1f-4608-8d43-255fb78008b6/generations/431e2f03-fcd2-43f3-b7ab-2898c78d9c50/Leonardo_Anime_XL_Comic_book_panel_ancient_Greek_stone_bridge_0.jpg",
+    "concept": "NULL pointer checks prevent crashes",
+    "dialogue": "CODE: if (!ptr) return;<br>MEANING: Never use a pointer without verifying it exists!"
+  },
+  {
+    "title": "The Oracle's Revelation",
+    "url": "https://cdn.leonardo.ai/users/f26f4645-9d1f-4608-8d43-255fb78008b6/generations/619298da-820f-4ef1-83b5-a5cc35260f3f/Leonardo_Anime_XL_Comic_book_splash_panel_Temple_of_Delphi_int_0.jpg",
+    "concept": "Complete verification achieves certainty",
+    "dialogue": "CODE: assert(verify_all_truths());<br>MEANING: We prove mathematically that no crash is possible!"
+  },
+  {
+    "title": "The Division Paradox",
+    "url": "https://cdn.leonardo.ai/users/f26f4645-9d1f-4608-8d43-255fb78008b6/generations/b8a0ed4e-e21b-4746-b035-3f15814f89df/Leonardo_Anime_XL_Comic_book_panel_Greek_theater_PLATO_dividin_0.jpg",
+    "concept": "Division by zero handling",
+    "dialogue": "CODE: if (denominator < 0.0001) return SAFE_VALUE;<br>MEANING: We detect and handle impossible math!"
+  },
+  {
+    "title": "The Walled City",
+    "url": "https://cdn.leonardo.ai/users/f26f4645-9d1f-4608-8d43-255fb78008b6/generations/c439823f-f5fb-41c1-b874-af3421109e45/Leonardo_Anime_XL_Comic_book_panel_Acropolis_walls_with_exactl_0.jpg",
+    "concept": "Resource limits enforced",
+    "dialogue": "CODE: if (count >= MAX_AIRCRAFT) return -1;<br>MEANING: We enforce hard limits - no overflow possible!"
+  }
+]

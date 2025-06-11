@@ -1,0 +1,20 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║  Panel 3: Every Access is Bounds-Checked                     ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║    Aircraft Array [16 slots total, 5 used]:                 ║
+║    [✓][✓][✓][✓][✓][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]         ║
+║     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15         ║
+║                                                              ║
+║    // Runtime verification                                   ║
+║    static bool verify_aircraft_count_bounds(                 ║
+║        const truth_bucket_t* bucket,                         ║
+║        void* context) {                                      ║
+║        aircraft_manager_t* mgr = context;                    ║
+║        return mgr != NULL &&                                 ║
+║               mgr->aircraft_count >= 0 &&                    ║
+║               mgr->aircraft_count <= MAX_AIRCRAFT;           ║
+║    }                                                         ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝

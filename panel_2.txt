@@ -1,0 +1,18 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║  Panel 2: Truth Bucket to the Rescue!                        ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║    Developer: "We'll use formal verification!"               ║
+║                                                              ║
+║    🛡️  TRUTH BUCKET SHIELD 🛡️                                 ║
+║                                                              ║
+║    // VERIFIED SAFE                                          ║
+║    TRUTH_REQUIRE(truth,                                      ║
+║        "manager is not null",                                ║
+║        manager != NULL);                                     ║
+║    TRUTH_REQUIRE(truth,                                      ║
+║        "id is in bounds",                                    ║
+║        id >= 0 && id < mgr->count);                         ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝

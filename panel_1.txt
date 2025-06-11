@@ -1,0 +1,17 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║  Panel 1: The Dreaded Segfault                               ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║    Developer: "Oh no! What if someone                       ║
+║               passes an invalid ID?"                         ║
+║                                                              ║
+║    // UNSAFE CODE                                            ║
+║    managed_aircraft_t* get_aircraft(                         ║
+║        aircraft_manager_t* mgr, int id) {                    ║
+║        return &mgr->aircraft[id]; // BOOM! 💥                ║
+║    }                                                         ║
+║                                                              ║
+║    Segfault Bug: "I'm coming for you!" 🐛                    ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝

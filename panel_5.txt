@@ -1,0 +1,19 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║  Panel 5: Mathematical Proof with F*                         ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║    Mathematician: "Proven at compile time!" 🎓                ║
+║                                                              ║
+║    // F* Type System Proof                                   ║
+║    type valid_count = n:nat{n <= 16}                         ║
+║    type valid_id (count:valid_count) =                      ║
+║        n:nat{n < count}                                      ║
+║                                                              ║
+║    let get_aircraft (mgr:aircraft_manager)                   ║
+║        (id:valid_id mgr.count) =                            ║
+║        mgr.aircraft.(id) (* Type-safe! *)                   ║
+║                                                              ║
+║    // Compiler rejects invalid access!                       ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝

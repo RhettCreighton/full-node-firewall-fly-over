@@ -1,0 +1,1 @@
+Usage: no_coredump_prover.py <binary> <source1.c> [source2.c ...]

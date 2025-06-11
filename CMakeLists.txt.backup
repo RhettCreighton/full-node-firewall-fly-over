@@ -1,0 +1,273 @@
+cmake_minimum_required(VERSION 3.10)
+project(full-node-firewall-flyover C)
+
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# Add module paths
+list(APPEND CMAKE_MODULE_PATH 
+    "${CMAKE_CURRENT_SOURCE_DIR}/modules/compile_time_gdb_proof"
+    "${CMAKE_CURRENT_SOURCE_DIR}/robust_build_system/cmake"
+)
+
+# Include compile-time GDB proof system
+option(ENABLE_GDB_PROOF "Enable compile-time GDB verification" ON)
+if(ENABLE_GDB_PROOF)
+    add_subdirectory(modules/compile_time_gdb_proof)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/modules/compile_time_gdb_proof/cmake/GDBProof.cmake OPTIONAL)
+endif()
+
+# Add safety flags to catch errors (but not as errors for now)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-unused-parameter")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
+
+
+
+# Find raylib
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(RAYLIB REQUIRED raylib)
+
+# Create library
+add_library(sky_combat STATIC
+    # Models
+    src/models/aircraft.c
+    src/models/course.c
+    src/models/weapons.c
+    src/models/ai_pilot.c
+    src/models/input_model.c
+    src/models/enemies.c
+    src/models/cyberpunk_world.c
+    
+    # Views
+    src/views/hud.c
+    src/views/input_view.c
+    src/views/combat_effects.c
+    
+    # Controllers
+    src/controllers/sky_combat.c
+    src/controllers/input.c
+    src/controllers/input_controller.c
+)
+
+target_include_directories(sky_combat PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${RAYLIB_INCLUDE_DIRS}
+)
+
+target_link_libraries(sky_combat PUBLIC
+    ${RAYLIB_LIBRARIES}
+    m
+)
+
+target_compile_options(sky_combat PUBLIC ${RAYLIB_CFLAGS_OTHER})
+target_link_directories(sky_combat PUBLIC ${RAYLIB_LIBRARY_DIRS})
+
+
+# DISABLED - Using unified binary instead
+# add_executable(sky_combat_ultimate
+    # Main controller
+    src/controllers/sky_combat_ultimate.c
+    
+    # Models
+    src/models/input_model_fast.c
+    src/models/aircraft_responsive.c
+    src/models/overdrive.c
+    src/models/boss_cyber_dragon.c
+    
+    # Controllers
+    src/controllers/input_controller_fast.c
+    src/controllers/input_mvc_fast.c
+    src/controllers/input_astro_direct.c
+)
+target_link_libraries(sky_combat_ultimate sky_combat)
+
+# Apply control lock verification if GDB proof is enabled
+if(ENABLE_GDB_PROOF)
+    REQUIRE_LOCKED_CONTROLS(sky_combat_ultimate)
+endif()
+
+
+
+
+# 5 Player version
+add_executable(sky_combat_5player
+    src/controllers/sky_combat_ultimate_5player.c
+    src/models/aircraft_manager.c
+    src/models/aircraft_responsive.c
+    src/models/overdrive.c
+    src/models/powerups.c
+    src/controllers/input_controller_fast.c
+    src/controllers/input_mvc_fast.c
+    src/models/input_model_fast.c
+)
+target_link_libraries(sky_combat_5player sky_combat)
+
+# Apply control lock verification if GDB proof is enabled
+if(ENABLE_GDB_PROOF)
+    REQUIRE_LOCKED_CONTROLS(sky_combat_5player)
+endif()
+
+# Team battle test
+add_executable(test_team_battles
+    src/models/test_team_battles.c
+    src/models/aircraft.c
+    src/models/weapons.c
+    src/models/aircraft_manager.c
+    src/models/match_rules.c
+    src/models/powerups.c
+)
+target_link_libraries(test_team_battles raylib m)
+target_include_directories(test_team_battles PRIVATE include)
+
+# Power-up test
+add_executable(test_powerups
+    src/models/test_powerups.c
+    src/models/powerups.c
+    src/models/aircraft.c
+    src/models/weapons.c
+    src/models/aircraft_manager.c
+    src/models/match_rules.c
+)
+target_link_libraries(test_powerups raylib m)
+target_include_directories(test_powerups PRIVATE include)
+
+# Complete multiplayer test
+add_executable(test_multiplayer_complete
+    src/models/test_multiplayer_complete.c
+    src/models/aircraft.c
+    src/models/weapons.c
+    src/models/aircraft_manager.c
+    src/models/match_rules.c
+    src/models/powerups.c
+)
+target_link_libraries(test_multiplayer_complete raylib m)
+target_include_directories(test_multiplayer_complete PRIVATE include)
+
+# Unit tests
+add_executable(test_aircraft_manager_unit
+    src/models/test_aircraft_manager_unit.c
+    src/models/aircraft.c
+    src/models/weapons.c
+    src/models/aircraft_manager.c
+    src/models/powerups.c
+)
+target_link_libraries(test_aircraft_manager_unit raylib m)
+target_include_directories(test_aircraft_manager_unit PRIVATE include)
+
+# Multiplayer game with view system
+add_executable(sky_combat_multiplayer
+    src/sky_combat_multiplayer.c
+    src/models/aircraft.c
+    src/models/aircraft_responsive.c
+    src/models/weapons.c
+    src/models/aircraft_manager.c
+    src/models/match_rules.c
+    src/models/powerups.c
+    src/models/cyberpunk_world.c
+    src/views/camera_controller.c
+    src/controllers/input_mvc_fast.c
+    src/controllers/input_controller_fast.c
+    src/models/input_model_fast.c
+)
+target_link_libraries(sky_combat_multiplayer raylib m)
+target_include_directories(sky_combat_multiplayer PRIVATE include)
+
+# Multiplayer Incremental - step by step from original
+add_executable(sky_combat_multiplayer_incremental
+    src/controllers/sky_combat_multiplayer_incremental.c
+    src/models/input_model_fast.c
+    src/models/aircraft_responsive.c
+    src/models/aircraft_manager.c
+    src/models/powerups.c
+    src/models/overdrive.c
+    src/models/boss_cyber_dragon.c
+    src/views/combat_effects.c
+    src/controllers/input_controller_fast.c
+    src/controllers/input_mvc_fast.c
+    src/controllers/input_astro_direct.c
+)
+target_link_libraries(sky_combat_multiplayer_incremental sky_combat)
+
+# Main game executable - FULL NODE: Firewall Fly-over
+add_executable(full-node-firewall-flyover
+    full_node_firewall_flyover.c
+)
+target_link_libraries(full-node-firewall-flyover sky_combat)
+set_target_properties(full-node-firewall-flyover PROPERTIES
+    OUTPUT_NAME "full-node-firewall-flyover"
+)
+
+# Apply ALL safety verifications
+if(ENABLE_GDB_PROOF)
+    REQUIRE_LOCKED_CONTROLS(full-node-firewall-flyover)
+endif()
+
+# Install
+install(TARGETS sky_combat DESTINATION lib)
+install(DIRECTORY include/sky_combat DESTINATION include)
+install(TARGETS full-node-firewall-flyover DESTINATION bin)
+install(TARGETS sky_combat_ultimate DESTINATION bin)
+install(TARGETS sky_combat_5player DESTINATION bin)
+install(TARGETS sky_combat_multiplayer DESTINATION bin)
+install(TARGETS sky_combat_multiplayer_incremental DESTINATION bin)
+
+# Control test program
+add_executable(test_controls_direct
+    test_controls_direct.c
+    src/models/input_model_fast.c
+    src/controllers/input_controller_fast.c
+    src/controllers/input_mvc_fast.c
+)
+target_link_libraries(test_controls_direct raylib m)
+target_include_directories(test_controls_direct PRIVATE include)
+
+# Multiplayer Ultimate - combines best of both
+add_executable(sky_combat_multiplayer_ultimate
+    src/sky_combat_multiplayer_ultimate.c
+    src/models/aircraft.c
+    src/models/aircraft_responsive.c
+    src/models/weapons.c
+    src/models/aircraft_manager.c
+    src/models/match_rules.c
+    src/models/powerups.c
+    src/models/cyberpunk_world.c
+    src/views/combat_effects.c
+    src/controllers/input_mvc_fast.c
+    src/controllers/input_controller_fast.c
+    src/models/input_model_fast.c
+)
+target_link_libraries(sky_combat_multiplayer_ultimate raylib m)
+target_include_directories(sky_combat_multiplayer_ultimate PRIVATE include)
+
+# Test program for GDB proof system
+if(ENABLE_GDB_PROOF)
+    add_executable(test_gdb_proof test_gdb_proof.c)
+    target_link_libraries(test_gdb_proof m)
+    target_include_directories(test_gdb_proof PRIVATE include)
+    
+    # Include the GDB proof module
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/modules/compile_time_gdb_proof/cmake")
+    include(GDBProof)
+    
+    # This will make the build FAIL if safety functions aren't called!
+    REQUIRE_NO_COREDUMP_GUARANTEE(test_gdb_proof)
+    
+    # Bad example - this should FAIL verification
+    add_executable(test_gdb_proof_bad test_gdb_proof_bad.c)
+    target_link_libraries(test_gdb_proof_bad m)
+    target_include_directories(test_gdb_proof_bad PRIVATE include)
+    REQUIRE_NO_COREDUMP_GUARANTEE(test_gdb_proof_bad)
+    
+    # Control lock test
+    add_executable(test_control_lock test_control_lock.c)
+    target_link_libraries(test_control_lock m)
+    target_include_directories(test_control_lock PRIVATE include)
+    REQUIRE_LOCKED_CONTROLS(test_control_lock)
+    
+    # Plane view demo
+    add_executable(plane_view_demo plane_view_demo.c)
+    target_link_libraries(plane_view_demo raylib m)
+    target_include_directories(plane_view_demo PRIVATE include)
+    REQUIRE_VIEW_BEHAVIOR(plane_view_demo)
+endif()
+
