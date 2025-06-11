@@ -1,6 +1,7 @@
-# Build directory
+# Build directories
 build/
 /build/
+build_*/
 
 # IDE files
 .vscode/
@@ -19,9 +20,24 @@ Thumbs.db
 *.so
 *.dll
 *.exe
+*.out
+
+# Binary executables
+full-node-firewall-flyover
+sky_combat
+sky_combat_ultimate
+test_fpe_fix
+comic_viewer
+firefox_app
+bad_app
 
 # CMake files
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 Makefile
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
