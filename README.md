@@ -1,83 +1,76 @@
-# Full Node: Firewall Fly-over 🎮✈️🔥
+# Sky Combat - Open World Aircraft Combat Game
 
-The ultimate multiplayer aerial combat game where you defend the blockchain network from cyber threats!
+A modular, open-world aircraft combat game with ground AI characters and enterable buildings.
 
-## 🚀 What's New
+## Features
 
-- **Infinite Bullets** - Hold R2 for continuous firewall defense streams
-- **Pac-Man Ghost AI** - Enemy nodes move with predictable patterns
-- **Kentucky Derby Names** - Face legendary adversaries like SECRETARIAT and SEATTLE SLEW
-- **Big Explosions** - Massive visual feedback when eliminating threats
-- **World Wrapping** - Seamless planet-surface battlefield
+- **Open World**: Large explorable world with dynamic loading
+- **Aircraft Combat**: Fast-paced aerial combat with proven controls
+- **Ground AI**: Autonomous characters that navigate and enter buildings
+- **Enterable Buildings**: Detailed interiors with multiple floors
+- **Command System**: Built-in console for testing and debugging
+- **Modular Architecture**: Clean MVC design for easy extension
 
-## Quick Start
+## Building
 
 ```bash
-# Build
-./build.sh
+mkdir build && cd build
+cmake ..
+make -j$(nproc)
+```
 
-# Run
-./build/sky_combat_multiplayer_incremental
+## Running
+
+```bash
+./build/sky_combat
 ```
 
 ## Controls
 
-### Gamepad (ASTRO C40)
-- **Left Stick** - Fly your node
-- **Right Stick** - Aim firewall stream
-- **R2** - Fire continuous security stream
-- **L2** - Missiles
-- **UL** - Throttle (30% speed boost)
-- **UR** - Turbo boost (mushroom-style burst)
-- **L1/R1** - Barrel rolls
+### Aircraft (ASTRO C40 / PlayStation layout)
+- **Left Stick** (inverted): Fly aircraft
+- **Right Stick**: Aim weapons (Y-axis on axis 5)
+- **L2**: Fire missiles
+- **R2**: Fire guns  
+- **UR (Triangle)**: 3x Boost
+- **UL (Square)**: Brake
+- **L1/R1**: Drift turns
 
 ### Keyboard
-- **WASD/Arrows** - Fly
-- **Mouse** - Aim firewall
-- **Left Ctrl** - Fire
-- **Space** - Boost
-- **Q/E** - Barrel rolls
-
-## Multiplayer Features
-
-- 5 simultaneous nodes in the network
-- Real-time combat with collision detection
-- Respawn system with 3-second delay
-- Kill tracking and statistics
-- Team support (ready for future updates)
-
-## Truth Bucket System
-
-This game implements a compositional verification approach to prevent crashes:
-- Hierarchical truth statements
-- Runtime verification
-- Formal proof integration points
-- See [truth_bucket_system.md](truth_bucket_system.md) for details
+- **WASD**: Fly aircraft
+- **Arrow Keys**: Aim
+- **Space**: Fire
+- **Shift**: Boost
+- **Z**: Brake
+- **~**: Open console
+- **F1**: Help
 
 ## Architecture
 
-Clean MVC architecture with:
-- **Models** - Game state, physics, collision detection
-- **Views** - Rendering, effects, UI
-- **Controllers** - Input handling, game flow
+The project follows a clean MVC architecture:
 
-## Building with Safety
+- **Models**: Game objects (aircraft, world, characters)
+- **Views**: Rendering and UI systems
+- **Controllers**: Input handling and game logic
+- **Core**: Central game state and systems
+- **Systems**: Physics, AI, combat mechanics
+
+## Development
+
+### Adding Features
+
+1. Create header in `include/sky_combat/feature/`
+2. Implement in `src/feature/`
+3. Add to appropriate CMakeLists.txt
+4. Write tests in `tests/`
+
+### Testing
 
 ```bash
-# Build with sanitizers for maximum safety
-./build_safe.sh
+cd build
+ctest
 ```
-
-## Dependencies
-
-- raylib 5.x
-- CMake 3.10+
-- C99 compiler
 
 ## License
 
-Apache-2.0
-
----
-
-*Formerly known as Sky Combat*
+Apache 2.0 - See LICENSE file
