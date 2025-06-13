@@ -99,9 +99,7 @@ float aircraft_get_speed_percent(aircraft_t* aircraft) {
     return (aircraft->speed - AIRCRAFT_MIN_SPEED) / (AIRCRAFT_MAX_SPEED - AIRCRAFT_MIN_SPEED);
 }
 
-void aircraft_update_responsive(aircraft_t* aircraft, float stick_x, float stick_y, float dt) {
-    aircraft_update(aircraft, stick_x, stick_y, dt);
-}
+// Removed - using the real responsive implementation from aircraft_responsive.c
 
 void aircraft_wrap_position(aircraft_t* aircraft) {
     if (aircraft->position.x > WORLD_HALF_SIZE) aircraft->position.x -= WORLD_SIZE;
@@ -111,4 +109,8 @@ void aircraft_wrap_position(aircraft_t* aircraft) {
     
     if (aircraft->position.y < WORLD_MIN_HEIGHT) aircraft->position.y = WORLD_MIN_HEIGHT;
     if (aircraft->position.y > WORLD_MAX_HEIGHT) aircraft->position.y = WORLD_MAX_HEIGHT;
+}
+
+Vector3 aircraft_get_position(aircraft_t* aircraft) {
+    return aircraft ? aircraft->position : (Vector3){0, 0, 0};
 }

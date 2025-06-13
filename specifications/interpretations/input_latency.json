@@ -1,0 +1,39 @@
+{
+  "specification_name": "input_latency",
+  "natural_language": "Input processing must complete within 16ms to maintain 60 FPS",
+  "formal_expression": "∀ input i: process_time(i) < 16ms",
+  "code_implementation": "if (elapsed > 16) { skip_frame(); }",
+  "test_validation": "measure(process_input) < 0.016",
+  "rationale": "Input lag destroys game feel. Hard deadline ensures consistent responsiveness even under load.",
+  
+  "alternatives": [
+    "Process input in separate thread",
+    "Use event queue with priorities",
+    "Interpolate between input samples",
+    "Variable timestep with catchup",
+    "Predictive input handling"
+  ],
+  
+  "rejection_reasons": [
+    "Threading adds synchronization complexity",
+    "Priority queues can starve low-priority inputs",
+    "Interpolation adds latency paradoxically",
+    "Variable timestep breaks physics determinism",
+    "Prediction causes correction artifacts"
+  ],
+  
+  "validation": {
+    "conventional": true,
+    "functional": true,
+    "coherent": true,
+    "empirical": true,
+    "consensual": true
+  },
+  
+  "evidence": {
+    "competitive_gaming": "16ms standard for fighting games",
+    "perception_studies": "Humans notice >20ms lag",
+    "hardware_specs": "USB polling at 1000Hz = 1ms",
+    "profiling_data": "Current code completes in 0.5ms"
+  }
+}

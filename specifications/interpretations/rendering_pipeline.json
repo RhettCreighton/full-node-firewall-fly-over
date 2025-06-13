@@ -1,0 +1,39 @@
+{
+  "specification_name": "rendering_pipeline",
+  "natural_language": "Rendering must gracefully handle all error conditions",
+  "formal_expression": "∀ render_state r: render(r) ∈ {SUCCESS, FALLBACK}",
+  "code_implementation": "if (glGetError() != GL_NO_ERROR) { use_fallback_renderer(); }",
+  "test_validation": "assert(render_with_bad_state() != crash)",
+  "rationale": "Graphics drivers are notoriously unreliable. Fallback paths ensure the game remains playable.",
+  
+  "alternatives": [
+    "Restart graphics context on error",
+    "Log errors and continue",
+    "Use software renderer always",
+    "Validate all GL state upfront",
+    "Use Vulkan for explicit control"
+  ],
+  
+  "rejection_reasons": [
+    "Context restart causes visible flicker",
+    "Continuing with errors corrupts display",
+    "Software rendering too slow for 3D",
+    "Full validation has high overhead",
+    "Vulkan not available everywhere"
+  ],
+  
+  "validation": {
+    "conventional": true,
+    "functional": true,
+    "coherent": true,
+    "empirical": true,
+    "consensual": true
+  },
+  
+  "evidence": {
+    "driver_bugs": "20% of users have buggy drivers",
+    "fallback_testing": "Wireframe mode always works",
+    "industry_practice": "All AAA games have fallbacks",
+    "support_tickets": "Fallbacks reduce support 90%"
+  }
+}

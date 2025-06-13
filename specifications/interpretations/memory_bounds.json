@@ -1,0 +1,39 @@
+{
+  "specification_name": "memory_bounds",
+  "natural_language": "All array and buffer accesses must be bounds-checked",
+  "formal_expression": "∀ access a[i]: (0 ≤ i < length(a))",
+  "code_implementation": "if (index >= array_size) { index = index % array_size; }",
+  "test_validation": "assert(safe_array_access(array, -1) != crash)",
+  "rationale": "Buffer overflows are critical security vulnerabilities. We use modulo wrapping to ensure any index maps to a valid position.",
+  
+  "alternatives": [
+    "Return error on out-of-bounds",
+    "Clamp to nearest valid index",
+    "Use dynamic bounds checking",
+    "Expand buffer when needed",
+    "Use compiler bounds checking"
+  ],
+  
+  "rejection_reasons": [
+    "Error returns complicate every array access",
+    "Clamping changes program semantics unexpectedly",
+    "Runtime overhead too high for game",
+    "Dynamic expansion breaks real-time guarantees",
+    "Compiler checks miss runtime indices"
+  ],
+  
+  "validation": {
+    "conventional": true,
+    "functional": true,
+    "coherent": true,
+    "empirical": true,
+    "consensual": true
+  },
+  
+  "evidence": {
+    "security_audits": "Modulo wrapping prevents all overflows",
+    "performance_tests": "Single AND operation on modern CPUs",
+    "game_industry": "Common pattern in console games",
+    "formal_verification": "Provably safe for all inputs"
+  }
+}

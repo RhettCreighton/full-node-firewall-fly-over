@@ -57,4 +57,7 @@ void aircraft_update_responsive(aircraft_t* aircraft, float stick_x, float stick
 // World wrapping
 void aircraft_wrap_position(aircraft_t* aircraft);
 
+// Getters for specification checks
+Vector3 aircraft_get_position(aircraft_t* aircraft);
+
 #endif // SKY_COMBAT_AIRCRAFT_H

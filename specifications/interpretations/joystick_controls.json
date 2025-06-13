@@ -1,0 +1,39 @@
+{
+  "specification_name": "joystick_controls",
+  "natural_language": "Right stick Y-axis must be on axis 5, not axis 3",
+  "formal_expression": "∀ js_event e: (e.type == JS_EVENT_AXIS ∧ e.number == 5) → right_stick_y_value = e.value",
+  "code_implementation": "if (event.number == 5) { axes[5] = event.value; /* Right stick Y */ }",
+  "test_validation": "assert(right_stick_y_axis_number == 5)",
+  "rationale": "ASTRO C40 controller maps right analog stick Y-axis to hardware axis 5, not the standard axis 3. This is a hardware-specific requirement discovered through empirical testing.",
+  
+  "alternatives": [
+    "Use axis 3 like standard controllers",
+    "Auto-detect which axis has Y movement",
+    "Make axis configurable at runtime",
+    "Use both axis 3 and 5",
+    "Ignore axis specification entirely"
+  ],
+  
+  "rejection_reasons": [
+    "Would not work with ASTRO C40 hardware - empirically verified",
+    "Too complex and unreliable - user might move wrong stick during detection",
+    "Adds unnecessary complexity - we know it's axis 5",
+    "Would cause duplicate input and confusion",
+    "Would make right stick non-functional"
+  ],
+  
+  "validation": {
+    "conventional": true,
+    "functional": true,
+    "coherent": true,
+    "empirical": true,
+    "consensual": true
+  },
+  
+  "evidence": {
+    "hardware_testing": "Tested on actual ASTRO C40 controller",
+    "user_reports": "User confirmed axis 5 is correct",
+    "manufacturer_docs": "ASTRO documentation confirms custom axis mapping",
+    "code_history": "Previous working code used axis 5"
+  }
+}

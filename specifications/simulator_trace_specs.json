@@ -1,0 +1,284 @@
+{
+  "specifications": [
+    {
+      "id": "SPEC_SIM_001_OPEN_WORLD",
+      "description": "Open world with seamless streaming",
+      "required_trace": [
+        {
+          "point": "WORLD_INIT_START",
+          "order": 1
+        },
+        {
+          "point": "WORLD_CHUNK_LOADED",
+          "order": 2,
+          "count": "multiple"
+        },
+        {
+          "point": "WORLD_SEAMLESS_READY",
+          "order": 3
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "LOADING_SCREEN_SHOWN",
+          "reason": "No loading screens allowed"
+        },
+        {
+          "point": "WORLD_BOUNDARY_HIT",
+          "reason": "World must be boundless"
+        }
+      ],
+      "test_scenario": "world_init"
+    },
+    {
+      "id": "SPEC_SIM_002_AIRCRAFT_PHYSICS",
+      "description": "Realistic aircraft physics with stall",
+      "required_trace": [
+        {
+          "point": "PHYSICS_UPDATE_START",
+          "order": 1
+        },
+        {
+          "point": "CALCULATE_LIFT_FORCE",
+          "order": 2
+        },
+        {
+          "point": "APPLY_AERODYNAMICS",
+          "order": 3
+        },
+        {
+          "point": "VELOCITY_CHANGED",
+          "order": 4
+        },
+        {
+          "point": "POSITION_UPDATED",
+          "order": 5
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "PHYSICS_INFINITE_ACCELERATION"
+        },
+        {
+          "point": "PHYSICS_IGNORE_GRAVITY"
+        },
+        {
+          "point": "PHYSICS_TELEPORT"
+        }
+      ],
+      "test_scenario": "aircraft_physics"
+    },
+    {
+      "id": "SPEC_SIM_002B_STALL_PHYSICS",
+      "description": "Aircraft must stall above critical angle",
+      "required_trace": [
+        {
+          "point": "STALL_CHECK",
+          "when": "AOA > 15°"
+        },
+        {
+          "point": "STALL_WARNING",
+          "when": "AOA > 15°"
+        }
+      ],
+      "test_scenario": "aircraft_stall"
+    },
+    {
+      "id": "SPEC_SIM_003_AI_CHARACTERS",
+      "description": "AI characters with individual behavior",
+      "required_trace": [
+        {
+          "point": "AI_SPAWN_CHARACTER",
+          "order": 1
+        },
+        {
+          "point": "AI_ASSIGN_PERSONALITY",
+          "order": 2
+        },
+        {
+          "point": "AI_BEGIN_ROUTINE",
+          "order": 3
+        },
+        {
+          "point": "AI_PATH_PLANNING",
+          "order": 4
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "AI_WALK_THROUGH_BUILDING"
+        },
+        {
+          "point": "AI_TELEPORT_TO_DESTINATION"
+        },
+        {
+          "point": "AI_IDENTICAL_BEHAVIOR"
+        }
+      ],
+      "test_scenario": "ai_behavior"
+    },
+    {
+      "id": "SPEC_SIM_003B_AI_AIRCRAFT_REACTION",
+      "description": "AI reacts to low-flying aircraft",
+      "required_trace": [
+        {
+          "point": "AI_REACT_TO_AIRCRAFT",
+          "when": "aircraft nearby and low"
+        }
+      ],
+      "test_scenario": "ai_aircraft_reaction"
+    },
+    {
+      "id": "SPEC_SIM_004_WEATHER_SYSTEM",
+      "description": "Dynamic weather affecting flight",
+      "required_trace": [
+        {
+          "point": "WEATHER_UPDATE",
+          "order": 1
+        },
+        {
+          "point": "WIND_FORCE_CALCULATED",
+          "order": 2
+        }
+      ],
+      "conditional_trace": [
+        {
+          "point": "AIRCRAFT_BUFFETING",
+          "when": "wind > 15m/s"
+        },
+        {
+          "point": "VISIBILITY_REDUCED",
+          "when": "visibility < 1000m"
+        },
+        {
+          "point": "INSTRUMENT_FLIGHT_REQUIRED",
+          "when": "visibility < 1000m"
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "WEATHER_INSTANT_CHANGE"
+        },
+        {
+          "point": "RAIN_INSIDE_COCKPIT"
+        }
+      ],
+      "test_scenario": "weather_dynamics"
+    },
+    {
+      "id": "SPEC_SIM_005_COMBAT_SYSTEM",
+      "description": "Weapon systems with realistic behavior",
+      "required_trace": [
+        {
+          "point": "WEAPON_ARMED",
+          "order": 1
+        }
+      ],
+      "conditional_trace": [
+        {
+          "point": "CANNON_FIRED",
+          "when": "weapon_type == cannon"
+        },
+        {
+          "point": "TARGET_LOCKED",
+          "when": "weapon_type == missile"
+        },
+        {
+          "point": "MISSILE_LAUNCHED",
+          "when": "weapon_type == missile"
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "INSTANT_HIT_WEAPON"
+        },
+        {
+          "point": "INFINITE_AMMO_USED"
+        },
+        {
+          "point": "DAMAGE_THROUGH_TERRAIN"
+        }
+      ],
+      "test_scenario": "combat_test"
+    },
+    {
+      "id": "SPEC_SIM_007_DAY_NIGHT_CYCLE",
+      "description": "24-hour cycle with proper transitions",
+      "required_trace": [
+        {
+          "point": "TIME_UPDATE",
+          "order": 1
+        },
+        {
+          "point": "SUN_POSITION_CALCULATED",
+          "order": 2
+        },
+        {
+          "point": "SHADOWS_UPDATED",
+          "order": 3
+        }
+      ],
+      "conditional_trace": [
+        {
+          "point": "NIGHT_TRANSITION",
+          "when": "time > 19:00 or time < 5:00"
+        },
+        {
+          "point": "STREET_LIGHTS_ON",
+          "when": "night time"
+        },
+        {
+          "point": "DAWN_BREAK",
+          "when": "5:00 < time < 7:00"
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "INSTANT_TIME_CHANGE"
+        },
+        {
+          "point": "SUN_TELEPORT"
+        }
+      ],
+      "test_scenario": "day_night_cycle"
+    },
+    {
+      "id": "SPEC_SIM_010_PERFORMANCE",
+      "description": "60 FPS with optimization techniques",
+      "required_trace": [
+        {
+          "point": "FRAME_START",
+          "order": 1
+        },
+        {
+          "point": "FRUSTUM_CULLING",
+          "order": 2
+        },
+        {
+          "point": "LOD_SELECTION",
+          "order": 3
+        },
+        {
+          "point": "AI_UPDATE_STAGGERED",
+          "order": 4
+        },
+        {
+          "point": "TARGET_FPS_MAINTAINED",
+          "order": 5
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "RENDER_EVERYTHING"
+        },
+        {
+          "point": "SINGLE_THREAD_BOTTLENECK"
+        },
+        {
+          "point": "MEMORY_LEAK_DETECTED"
+        }
+      ],
+      "test_scenario": "performance_test"
+    }
+  ]
+}

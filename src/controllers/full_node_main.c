@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "gdb_proof.h"
 #include "gdb_proof_controls.h"
+#include "sky_combat/core/specification.h"
+#include "sky_combat/specifications/spec_init_order.h"
 
 // Forward declare the actual game
 int sky_combat_ultimate_main(void);
@@ -19,6 +21,10 @@ int sky_combat_ultimate_main(void);
 static void initialize_safety_systems(void) {
     printf("=== FULL NODE: Firewall Fly-over ===\n");
     printf("Initializing safety systems...\n\n");
+    
+    // Step 0: CRITICAL - Initialize specification system FIRST
+    spec_init_order_ensure_system_ready();
+    printf("✅ Specification system initialized\n");
     
     // Step 1: Core safety proofs
     gdb_proof_init_aircraft_manager();

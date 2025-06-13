@@ -36,6 +36,10 @@
 void aircraft_update_responsive(aircraft_t* aircraft, float stick_x, float stick_y, float dt);
 void camera_update_responsive(Camera3D* camera, Vector3 target, float yaw, float distance, float height, float dt);
 
+// Include specifications
+#include "sky_combat/specifications/aircraft_controls_spec.h"
+#include "sky_combat/core/secure_code_points.h"
+
 typedef struct {
     // Core systems
     aircraft_t* aircraft;
@@ -84,6 +88,9 @@ typedef struct {
     bool motion_blur_enabled;
     bool chromatic_enabled;
     float speed_lines_intensity;
+    
+    // Specifications
+    aircraft_controls_spec_t* controls_spec;
 } ultimate_game_t;
 
 static ultimate_game_t* game_create(void) {
@@ -114,6 +121,9 @@ static ultimate_game_t* game_create(void) {
     // Visual settings
     game->motion_blur_enabled = true;
     game->chromatic_enabled = true;
+    
+    // Create controls specification
+    game->controls_spec = aircraft_controls_spec_create();
     
     // Generate world
     cyberpunk_world_generate(game->world, 42);
@@ -296,10 +306,16 @@ static void draw_advanced_ui(ultimate_game_t* game) {
     DrawRectangle(60, bar_y + 25, 200, 20, DARKGRAY);
     DrawRectangle(60, bar_y + 25, (int)(game->shield_power * 2), 20, SKYBLUE);
     
-    // Boost
-    DrawText("BOOST", 10, bar_y + 50, 16, WHITE);
+    // Nitro
+    DrawText("NITRO", 10, bar_y + 50, 16, WHITE);
     DrawRectangle(60, bar_y + 50, 200, 20, DARKGRAY);
-    DrawRectangle(60, bar_y + 50, (int)(game->boost_fuel * 2), 20, ORANGE);
+    Color nitro_color = game->boost_fuel < 25.0f ? RED : SKYBLUE;  // Red when can't nitro
+    DrawRectangle(60, bar_y + 50, (int)(game->boost_fuel * 2), 20, nitro_color);
+    
+    // Low nitro warning
+    if (game->boost_fuel < 25.0f) {
+        DrawText("LOW NITRO!", 270, bar_y + 50, 16, RED);
+    }
     
     // Stats on right side
     int stats_x = GetScreenWidth() - 200;
@@ -383,7 +399,7 @@ void sigfpe_handler(int sig) {
     exit(1);
 }
 
-int main(void) {
+int sky_combat_ultimate_main(void) {
     // Initialize REAL crash protection first
     crash_protection_init();
     
@@ -444,14 +460,25 @@ int main(void) {
         // Apply overdrive speed boost
         float speed_mult = overdrive_is_active(game->overdrive) ? 1.5f : 1.0f;
         
-        // Aircraft update
+        // Aircraft update - MUST use responsive version
         aircraft_update_responsive(game->aircraft, input.move_x, input.move_y, dt);
         
-        // Speed control - New system with UR throttle and UL boost
+        // Verify we're using responsive controls
+        if (game->controls_spec) {
+            aircraft_controls_spec_verify_responsive_update(game->controls_spec, "aircraft_update_responsive");
+            aircraft_controls_spec_check_turn_rate(game->controls_spec, game->aircraft, input.move_x, dt);
+            aircraft_controls_spec_check_roll_direct(game->controls_spec, game->aircraft, input.move_x);
+        }
         
-        // UR button = Mario Kart style mushroom boost (ORIGINAL)
-        if (input.brake && game->boost_timer <= 0) {  // UR boost (Button 3)
-            game->boost_timer = 0.75f;  // 0.75 second duration (HALF recharge time)
+        // Speed control - FIXED: UR=speed up, UL=boost
+        
+        // Store speed before for spec checking
+        float speed_before = game->aircraft->speed;
+        
+        // UL button = Nitro boost (Button 2)
+        if (input.speed_boost && game->boost_timer <= 0 && game->boost_fuel >= 25.0f) {  // UL nitro (Button 2) - requires 25% fuel
+            game->boost_timer = 0.75f;  // 0.75 second duration
+            game->boost_fuel -= 25.0f;  // Consume 25% fuel per nitro boost
             
             // INSTANT massive speed increase (like mushroom boost)
             game->aircraft->speed = AIRCRAFT_MAX_SPEED * 2.5f * speed_mult;
@@ -462,6 +489,13 @@ int main(void) {
             effects_screen_shake(game->effects, 3.0f, 0.5f);
             effects_screen_flash(game->effects, SKYBLUE, 0.3f);
             effects_spawn_powerup_collect(game->effects, game->aircraft->position, SKYBLUE);
+            
+            // Extra particle trail effect for boost
+            for (int i = 0; i < 10; i++) {
+                effects_spawn_powerup_collect(game->effects, game->aircraft->position, SKYBLUE);
+            }
+            
+            SECURE_CODE_POINT(UL_NITRO_ACTIVATED, "true");
         }
         
         // Boost decay - rapid falloff like Mario Kart
@@ -479,14 +513,35 @@ int main(void) {
                                              AIRCRAFT_MAX_SPEED * 1.2f * speed_mult);
             }
         }
-        // UL button = normal throttle (ORIGINAL)
-        else if (input.speed_boost) {  // UL throttle (Button 2)
+        // UR button = Gas/Go (Button 3)
+        else if (input.brake) {  // UR gas pedal (Button 3)
             game->aircraft->speed = fminf(game->aircraft->speed + 60.0f * dt * speed_mult, 
                                          AIRCRAFT_MAX_SPEED * 1.2f * speed_mult);
             game->speed_lines_intensity = 0.6f;
+            
+            SECURE_CODE_POINT(UR_GAS_ACTIVATED, "true");
+        }
+        
+        // Check button mapping with specification
+        if (game->controls_spec) {
+            aircraft_controls_spec_check_button_mapping(game->controls_spec,
+                                                      input.brake,      // UR pressed
+                                                      input.speed_boost, // UL pressed
+                                                      speed_before,
+                                                      game->aircraft->speed,
+                                                      game->boost_timer);
+        }
+        
+        // Air brake for sharp turns - hold both L1 and R1
+        if (input.barrel_roll_left && input.barrel_roll_right) {
+            game->aircraft->speed = fmaxf(game->aircraft->speed - 150.0f * dt, AIRCRAFT_MIN_SPEED);
+            game->speed_lines_intensity = 0.0f;
+            
+            // Visual feedback for air brake
+            effects_spawn_shield_ripple(game->effects, game->aircraft->position, 10.0f);
         }
         // No throttle = gradual speed decrease
-        else {
+        else if (!input.brake && game->boost_timer <= 0) {
             game->aircraft->speed = fmaxf(game->aircraft->speed - 25.0f * dt, AIRCRAFT_MIN_SPEED);
             game->speed_lines_intensity = fmaxf(0, game->speed_lines_intensity - dt * 2);
         }
@@ -620,7 +675,7 @@ int main(void) {
         if (game->damage_flash > 0) game->damage_flash -= dt;
         
         if (game->boost_fuel < 100 && !input.speed_boost) {
-            game->boost_fuel += 15 * dt;
+            game->boost_fuel += 30 * dt;  // Doubled regen rate for more arcade-style boost availability
         }
         
         if (game->shield_power < 100 && !enemies_check_player_hit(game->enemies, 

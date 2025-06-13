@@ -1,0 +1,118 @@
+{
+  "specifications": [
+    {
+      "id": "SPEC_JOYSTICK_NULL_SAFETY",
+      "description": "Joystick must safely handle NULL input",
+      "required_trace": [
+        {
+          "point": "NULL_INPUT",
+          "condition": "event == NULL",
+          "sha3": "a7b8c9d0e1f2345678901234567890abcdef1234567890abcdef1234567890ab"
+        }
+      ],
+      "forbidden_trace": [],
+      "test_scenarios": ["null_input"]
+    },
+    {
+      "id": "SPEC_JOYSTICK_AXIS_5_CORRECT",
+      "description": "Right stick Y must use axis 5, never axis 3",
+      "required_trace": [
+        {
+          "point": "RIGHT_STICK_Y_CORRECT",
+          "condition": "axis == 5",
+          "sha3": "b8c9d0e1f23456789012345678901234567890abcdef1234567890abcdef1234"
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "RIGHT_STICK_Y_WRONG",
+          "condition": "axis == 3",
+          "sha3": "c9d0e1f234567890123456789012345678901234567890abcdef1234567890ab"
+        }
+      ],
+      "test_scenarios": ["correct_axis", "wrong_axis"]
+    },
+    {
+      "id": "SPEC_JOYSTICK_BOUNDS_CHECK",
+      "description": "Invalid axis values must be caught",
+      "required_trace": [
+        {
+          "point": "INVALID_AXIS",
+          "condition": "axis < 0 || axis >= 8",
+          "sha3": "d0e1f23456789012345678901234567890abcdef1234567890abcdef12345678"
+        }
+      ],
+      "forbidden_trace": [],
+      "test_scenarios": ["invalid_axis"]
+    },
+    {
+      "id": "SPEC_ARRAY_NULL_HANDLING",
+      "description": "Array operations must handle NULL arrays",
+      "required_trace": [
+        {
+          "point": "NULL_ARRAY",
+          "condition": "array == NULL",
+          "sha3": "e1f234567890123456789012345678901234567890abcdef1234567890abcdef"
+        }
+      ],
+      "forbidden_trace": [],
+      "test_scenarios": ["array_null"]
+    },
+    {
+      "id": "SPEC_ARRAY_SAFE_ACCESS",
+      "description": "Valid arrays must use safe modulo access",
+      "required_trace": [
+        {
+          "point": "ARRAY_ACCESS_SAFE",
+          "condition": "modulo wrapped",
+          "sha3": "f23456789012345678901234567890abcdef1234567890abcdef1234567890ab"
+        }
+      ],
+      "forbidden_trace": [],
+      "test_scenarios": ["array_safe"]
+    },
+    {
+      "id": "SPEC_NO_DIVIDE_BY_ZERO",
+      "description": "Division by zero must be handled",
+      "required_trace": [
+        {
+          "point": "DIVIDE_BY_ZERO",
+          "condition": "denominator == 0",
+          "sha3": "34567890123456789012345678901234567890abcdef1234567890abcdef1234"
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "DIVIDE_OVERFLOW",
+          "condition": "!isfinite(result)",
+          "sha3": "4567890123456789012345678901234567890abcdef1234567890abcdef12345"
+        }
+      ],
+      "test_scenarios": ["divide_zero"]
+    },
+    {
+      "id": "SPEC_COMPLETE_INPUT_COVERAGE",
+      "description": "All possible inputs must reach a secure exit",
+      "required_trace": [
+        {
+          "point": "*",
+          "condition": "any secure exit",
+          "sha3": "*"
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "RIGHT_STICK_Y_WRONG",
+          "condition": "axis == 3",
+          "sha3": "c9d0e1f234567890123456789012345678901234567890abcdef1234567890ab"
+        },
+        {
+          "point": "DIVIDE_OVERFLOW",  
+          "condition": "!isfinite(result)",
+          "sha3": "4567890123456789012345678901234567890abcdef1234567890abcdef12345"
+        }
+      ],
+      "test_scenarios": ["null_input", "correct_axis", "wrong_axis", "invalid_axis", "array_null", "array_safe", "divide_zero", "divide_safe", "unknown_test"]
+    }
+  ]
+}

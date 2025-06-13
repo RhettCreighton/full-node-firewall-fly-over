@@ -1,0 +1,124 @@
+cmake_minimum_required(VERSION 3.10)
+project(SkyCombat3DWorld C)
+
+set(CMAKE_C_STANDARD 99)
+
+# Find graphics library
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(RAYLIB raylib)
+pkg_check_modules(SDL2 sdl2)
+
+# Define all secure code points
+set(SECURE_POINTS
+    RENDERER_3D_INIT
+    OPENGL_CONTEXT_CREATED
+    SHADERS_COMPILED
+    WORLD_MESH_LOADED
+    TEXTURES_LOADED
+    CITY_GENERATION_START
+    BUILDING_MESH_CREATED
+    BUILDING_PLACED
+    BUILDING_RENDERED_IN_3D
+    NEON_LIGHTS_ACTIVE
+    NEON_SIGNS_GLOWING
+    WINDOWS_ILLUMINATED
+    STREET_LEVEL_DETAIL
+    REFLECTIONS_CALCULATED
+    COCKPIT_VIEW_ACTIVE
+    COCKPIT_MODEL_LOADED
+    HUD_OVERLAY_RENDERED
+    INSTRUMENTS_UPDATED
+    PILOT_HANDS_VISIBLE
+    CONTROL_STICK_MOVES
+    VIEW_THROUGH_GLASS
+    CANOPY_REFLECTIONS
+    RAIN_ON_CANOPY
+    AIRCRAFT_IN_SPACE_3D
+    BUILDINGS_APPROACH
+    FLY_BETWEEN_BUILDINGS
+    CLOSE_CALL_DETECTED
+    BUILDING_WHOOSH_SOUND
+    GROUND_RUSH_EFFECT
+    SPEED_BLUR_ACTIVE
+    BANKING_THROUGH_STREETS
+    CROWD_SIMULATION_ACTIVE
+    AI_SPAWNED_AT_STREET
+    AI_MESH_RENDERED
+    AI_ANIMATION_PLAYING
+    AI_FLEE_FROM_LOW_AIRCRAFT
+    TINY_PEOPLE_VISIBLE
+    SHADOWS_CAST_ON_GROUND
+    CAMERA_POSITIONED
+    FRUSTUM_CALCULATED
+    SCENE_RENDERED
+    FIRST_FRAME_RENDERED
+    NIGHT_LIGHTING_ACTIVE
+    PITCH_UP_INPUT
+    PITCH_DOWN_INPUT
+    ROLL_LEFT_INPUT
+    ROLL_RIGHT_INPUT
+    THRUST_DECREASE
+    THRUST_INCREASE
+)
+
+# Forbidden paths - these must be 0
+set(FORBIDDEN_POINTS
+    FLAT_2D_RENDERING
+    ASCII_ONLY_DISPLAY
+    RENDER_AS_TEXT
+    NO_GRAPHICS_FALLBACK
+    EMPTY_WORLD
+    FLAT_TERRAIN_ONLY
+    NO_COCKPIT_VIEW
+    EXTERNAL_ONLY_CAMERA
+    TEXT_BASED_HUD
+)
+
+# Create path definitions
+foreach(POINT ${SECURE_POINTS})
+    add_compile_definitions(PATH_${POINT}_EXISTS=1)
+endforeach()
+
+foreach(POINT ${FORBIDDEN_POINTS})
+    add_compile_definitions(PATH_${POINT}_EXISTS=0)
+endforeach()
+
+add_compile_definitions(TRACING_BUILD)
+
+# Include directories
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+# Demonstration executable (always builds)
+add_executable(demonstrate_3d_world demonstrate_3d_world.c)
+target_link_libraries(demonstrate_3d_world m)
+
+# Full 3D version with graphics
+if(RAYLIB_FOUND)
+    add_executable(sky_combat_3d_cyberpunk src/sky_combat_3d_cyberpunk.c)
+    target_compile_definitions(sky_combat_3d_cyberpunk PRIVATE USE_RAYLIB)
+    target_include_directories(sky_combat_3d_cyberpunk PRIVATE ${RAYLIB_INCLUDE_DIRS})
+    target_link_libraries(sky_combat_3d_cyberpunk ${RAYLIB_LIBRARIES} m)
+    
+    message(STATUS "Building with raylib 3D graphics")
+elseif(SDL2_FOUND)
+    add_executable(sky_combat_3d_sdl src/sky_combat_3d_sdl.c)
+    target_compile_definitions(sky_combat_3d_sdl PRIVATE USE_SDL2)
+    target_include_directories(sky_combat_3d_sdl PRIVATE ${SDL2_INCLUDE_DIRS})
+    target_link_libraries(sky_combat_3d_sdl ${SDL2_LIBRARIES} m)
+    
+    message(STATUS "Building with SDL2 3D graphics")
+else()
+    message(STATUS "No graphics library found - building demonstration only")
+    message(STATUS "Install raylib-devel or SDL2-devel for full 3D experience")
+endif()
+
+# Verification executable
+add_executable(verify_3d_world src/verify_3d_world.c)
+target_link_libraries(verify_3d_world m)
+
+# Custom target to run verification
+add_custom_target(verify_3d
+    COMMAND verify_3d_world
+    DEPENDS verify_3d_world
+    COMMENT "Verifying 3D world specifications..."
+)

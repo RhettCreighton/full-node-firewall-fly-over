@@ -435,3 +435,28 @@ static void apply_constraints(camera_controller_t* controller) {
                                              Vector3Scale(forward, distance));
     }
 }
+
+/* Responsive camera update for enhanced gameplay */
+void camera_update_responsive(Camera3D* camera, Vector3 target, float yaw, float distance, float height, float dt) {
+    if (!camera) return;
+    
+    /* Calculate ideal camera position behind and above aircraft */
+    float cam_x = target.x - sinf(yaw * DEG2RAD) * distance;
+    float cam_z = target.z - cosf(yaw * DEG2RAD) * distance;
+    float cam_y = target.y + height;
+    
+    Vector3 ideal_pos = (Vector3){cam_x, cam_y, cam_z};
+    
+    /* Smooth camera movement */
+    camera->position.x = Lerp(camera->position.x, ideal_pos.x, 5.0f * dt);
+    camera->position.y = Lerp(camera->position.y, ideal_pos.y, 5.0f * dt);
+    camera->position.z = Lerp(camera->position.z, ideal_pos.z, 5.0f * dt);
+    
+    /* Look at target with some forward offset */
+    Vector3 look_target = target;
+    look_target.x += sinf(yaw * DEG2RAD) * 10.0f;
+    look_target.z += cosf(yaw * DEG2RAD) * 10.0f;
+    
+    camera->target = look_target;
+    camera->up = (Vector3){0, 1, 0};
+}

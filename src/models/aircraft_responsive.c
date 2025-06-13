@@ -64,26 +64,7 @@ void aircraft_update_responsive(aircraft_t* aircraft, float stick_x, float stick
     aircraft_wrap_position(aircraft);
 }
 
-// Responsive camera that follows tightly
-void camera_update_responsive(Camera3D* camera, Vector3 target, float yaw, float distance, float height, float dt) {
-    // Calculate desired camera position - no smoothing
-    float yaw_rad = yaw * DEG2RAD;
-    
-    Vector3 offset = {
-        -sinf(yaw_rad) * distance,
-        height,
-        -cosf(yaw_rad) * distance
-    };
-    
-    Vector3 desired_pos = Vector3Add(target, offset);
-    
-    // Minimal smoothing for camera - much tighter following
-    float camera_smoothness = 12.0f;  // Much higher than original 5.0f
-    camera->position = Vector3Lerp(camera->position, desired_pos, camera_smoothness * dt);
-    
-    // Target tracks exactly
-    camera->target = target;
-}
+// Camera update function moved to camera_controller.c to avoid duplication
 
 // Instant barrel roll - simplified for existing struct
 void aircraft_barrel_roll_instant(aircraft_t* aircraft, float direction) {

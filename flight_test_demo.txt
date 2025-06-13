@@ -1,0 +1,66 @@
+=== FLIGHT TEST SCREEN ===
+
+     ATTITUDE      
+   ╔═══════════╗   
+   ║   │      ║
+   ║   │      ║
+   ║═══╪═══   ║ Roll: +5.0°
+   ║   │      ║
+   ║   │      ║
+   ║   │      ║
+   ╚═══════════╝   
+
+AIRSPEED          ALTITUDE
+┌────────┐        ┌────────┐
+│ 150 m/s│        │ 1000 m │
+└────────┘        └────────┘
+
+ANGLE OF ATTACK   THRUST
+┌────────┐        ┌────────┐
+│+2.5°   │        │75%     │
+└────────┘        └────────┘
+
+G-FORCE: ████████░░ 1.6G
+
+SIDE VIEW:
+    │
+  ══╪══
+    │
+
+
+
+
+
+
+
+
+════════════════
+
+CONTROLS:
+W/S - Pitch up/down    Q/E - Thrust -/+
+A/D - Roll left/right  SPACE - Center
+ESC - Exit
+
+=== WHEN STALLING ===
+
+ANGLE OF ATTACK   THRUST
+┌────────┐        ┌────────┐
+│STALL!  │        │50%     │
+└────────┘        └────────┘
+
+      ╱
+     ╱
+  ══╱══  <-- Aircraft nose high
+   ╱ 
+
+=== SECURE CODE POINT TRACES (when TRACE_MODE=1) ===
+
+TRACE:PHYSICS_UPDATE_START:000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+TRACE:CALCULATE_LIFT_COEFFICIENT:000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+TRACE:LIFT_CALCULATED:000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+TRACE:FORCES_CALCULATED:000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+TRACE:VELOCITY_UPDATED:000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+TRACE:POSITION_UPDATED:000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+TRACE:PITCH_UP_INPUT:000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+TRACE:STALL_DETECTED:000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+TRACE:STALL_WARNING_ACTIVE:000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f

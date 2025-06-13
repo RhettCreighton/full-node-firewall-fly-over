@@ -1,0 +1,152 @@
+{
+  "specifications": [
+    {
+      "id": "SPEC_INIT_NULL_SAFETY",
+      "description": "Initialization must handle NULL parameters safely",
+      "required_trace": [
+        {
+          "point": "JOYSTICK_INIT_START",
+          "order": 1
+        },
+        {
+          "point": "JOYSTICK_INIT_NULL_STATE",
+          "order": 2,
+          "when": "js == NULL"
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "JOYSTICK_INIT_SUCCESS",
+          "reason": "Cannot succeed with NULL state"
+        }
+      ],
+      "test_scenarios": ["init_null_state"]
+    },
+    {
+      "id": "SPEC_INIT_SUCCESS_PATH",
+      "description": "Valid initialization must follow success path",
+      "required_trace": [
+        {
+          "point": "JOYSTICK_INIT_START",
+          "order": 1
+        },
+        {
+          "point": "JOYSTICK_OPENED",
+          "order": 2
+        },
+        {
+          "point": "JOYSTICK_INIT_SUCCESS",
+          "order": 3
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "JOYSTICK_INIT_NULL_STATE"
+        },
+        {
+          "point": "JOYSTICK_INIT_NULL_DEVICE"
+        }
+      ],
+      "test_scenarios": ["init_success"]
+    },
+    {
+      "id": "SPEC_RIGHT_STICK_Y_AXIS_5",
+      "description": "Right stick Y must use axis 5 exclusively",
+      "required_trace": [
+        {
+          "point": "PROCESS_EVENT_START",
+          "order": 1
+        },
+        {
+          "point": "EVENT_TYPE_AXIS",
+          "order": 2
+        },
+        {
+          "point": "RIGHT_STICK_Y_AXIS_5",
+          "order": 3,
+          "when": "axis == 5"
+        },
+        {
+          "point": "PROCESS_EVENT_SUCCESS",
+          "order": 4
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "RIGHT_STICK_Y_AXIS_3_WRONG",
+          "reason": "Axis 3 must never be used for right stick Y"
+        }
+      ],
+      "test_scenarios": ["process_axis_5"]
+    },
+    {
+      "id": "SPEC_AXIS_3_FORBIDDEN",
+      "description": "Axis 3 must never update right stick Y",
+      "required_trace": [
+        {
+          "point": "PROCESS_EVENT_START",
+          "order": 1
+        },
+        {
+          "point": "EVENT_TYPE_AXIS",
+          "order": 2
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "RIGHT_STICK_Y_AXIS_3_WRONG",
+          "reason": "This path must be unreachable"
+        }
+      ],
+      "test_scenarios": ["process_axis_3"]
+    },
+    {
+      "id": "SPEC_GET_RIGHT_Y_CORRECT",
+      "description": "Getting right stick Y must read from axis 5",
+      "required_trace": [
+        {
+          "point": "GET_RIGHT_Y_START",
+          "order": 1
+        },
+        {
+          "point": "RIGHT_Y_FROM_AXIS_5",
+          "order": 2
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "RIGHT_Y_FROM_AXIS_3_ERROR",
+          "reason": "Must never read axis 3 for right Y"
+        }
+      ],
+      "test_scenarios": ["get_right_y"]
+    },
+    {
+      "id": "SPEC_COMPLETE_TRACE_COVERAGE",
+      "description": "All code paths must be traceable",
+      "required_trace": [
+        {
+          "point": "*",
+          "order": "any",
+          "description": "At least one secure point per scenario"
+        }
+      ],
+      "forbidden_trace": [
+        {
+          "point": "RIGHT_STICK_Y_AXIS_3_WRONG"
+        },
+        {
+          "point": "RIGHT_Y_FROM_AXIS_3_ERROR"
+        }
+      ],
+      "test_scenarios": [
+        "init_null_state",
+        "init_null_device",
+        "init_success",
+        "process_axis_5",
+        "process_axis_3",
+        "get_right_y"
+      ]
+    }
+  ]
+}

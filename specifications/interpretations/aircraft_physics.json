@@ -1,0 +1,39 @@
+{
+  "specification_name": "aircraft_physics",
+  "natural_language": "Aircraft physics must remain stable under all inputs",
+  "formal_expression": "∀ state s, input i: physics_step(s, i) ∈ ValidStates",
+  "code_implementation": "velocity = clamp(velocity, -MAX_SPEED, MAX_SPEED)",
+  "test_validation": "assert(!isnan(aircraft.position.x) && !isinf(aircraft.position.x))",
+  "rationale": "Unbounded physics values lead to NaN propagation and rendering failures. Clamping ensures system stability.",
+  
+  "alternatives": [
+    "Use fixed-point arithmetic",
+    "Reset to safe state on NaN",
+    "Use physics engine library",
+    "Implement soft limits with drag",
+    "Use double precision everywhere"
+  ],
+  
+  "rejection_reasons": [
+    "Fixed-point too limiting for 3D flight",
+    "Reset causes visible glitches",
+    "External dependencies against requirements",
+    "Soft limits can still overflow eventually",
+    "Doubles just delay the problem"
+  ],
+  
+  "validation": {
+    "conventional": true,
+    "functional": true,
+    "coherent": true,
+    "empirical": true,
+    "consensual": true
+  },
+  
+  "evidence": {
+    "flight_sims": "Industry standard hard limits",
+    "numerical_analysis": "Clamping prevents error accumulation",
+    "player_testing": "Hard limits feel more responsive",
+    "stability_proofs": "Bounded values guarantee convergence"
+  }
+}
